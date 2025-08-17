@@ -1,28 +1,29 @@
 import { Component, computed, input } from '@angular/core';
-import { BalanceCard } from "../balance-card/balance-card";
+import { Transaction } from 'src/app/shared/transaction/interfaces/transaction';
+import { BalanceCard } from '../balance-card/balance-card';
 
 @Component({
   selector: 'app-balance',
   imports: [BalanceCard],
   templateUrl: './balance.html',
-  styleUrl: './balance.scss'
+  styleUrl: './balance.scss',
 })
 export class Balance {
-  transactions = input.required<{ value: number, type: string }[]>();
+  transactions = input.required<Transaction[]>();
 
   totalIncomes = computed(() => {
     return this.transactions()
-    .filter(item => item.type === 'income')
-    .reduce((total, item) => total + item.value, 0);
-  })
+      .filter((item) => item.type === 'income')
+      .reduce((total, item) => total + item.value, 0);
+  });
 
   totalOutcomes = computed(() => {
     return this.transactions()
-    .filter(item => item.type === 'outcome')
-    .reduce((total, item) => total + item.value, 0);
-  })
+      .filter((item) => item.type === 'outcome')
+      .reduce((total, item) => total + item.value, 0);
+  });
 
   balance = computed(() => {
     return this.totalIncomes() - this.totalOutcomes();
-  })
+  });
 }
