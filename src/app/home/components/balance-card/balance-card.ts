@@ -21,6 +21,9 @@ export class BalanceCard {
     if (this.type() === 'outcome') {
       return 'outcome';
     }
+    if (this.value() === 0) {
+      return 'zero';
+    }
     return this.value() > 0 ? 'income' : 'outcome';
   });
 }

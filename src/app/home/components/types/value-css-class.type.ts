@@ -1,1 +1,1 @@
-export type ValueCssClassType = 'income' | 'outcome';
+export type ValueCssClassType = 'income' | 'outcome' | 'zero';
