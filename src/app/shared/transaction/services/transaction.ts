@@ -1,0 +1,20 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Transaction } from 'src/app/shared/transaction/interfaces/transaction';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class TransactionService {
+  private readonly api = 'http://localhost:3000/transactions';
+
+  private readonly httpClient = inject(HttpClient);
+
+  getById(id: number) {
+    return this.httpClient.get<Transaction>(`${this.api}/${id}`);
+  }
+
+  getAll() {
+    return this.httpClient.get<Transaction[]>(this.api);
+  }
+}
