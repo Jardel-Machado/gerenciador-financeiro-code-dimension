@@ -1,8 +1,58 @@
 {
   "transactions": [
-    { "id": 1, "title": "Salário", "value": 100, "type": "income" },
-    { "id": 2, "title": "Freelance", "value": 50, "type": "income" },
-    { "id": 3, "title": "Aluguel", "value": 50, "type": "outcome" },
-    { "id": 4, "title": "Conta de Luz", "value": 100, "type": "outcome" }
+    {
+      "id": 1,
+      "title": "Salário",
+      "value": 100,
+      "type": "income"
+    },
+    {
+      "id": 2,
+      "title": "Freelance",
+      "value": 50,
+      "type": "income"
+    },
+    {
+      "id": 3,
+      "title": "Aluguel",
+      "value": 50,
+      "type": "outcome"
+    },
+    {
+      "id": 4,
+      "title": "Conta de Luz",
+      "value": 100,
+      "type": "outcome"
+    },
+    {
+      "type": "income",
+      "title": "Salário",
+      "value": 2500,
+      "id": 5
+    },
+    {
+      "type": "outcome",
+      "title": "Supermercado",
+      "value": 100,
+      "id": 6
+    },
+    {
+      "type": "income",
+      "title": "Recebi um Pix",
+      "value": 50,
+      "id": 7
+    },
+    {
+      "type": "outcome",
+      "title": "Teste",
+      "value": 12,
+      "id": 8
+    },
+    {
+      "type": "income",
+      "title": "Teste 2 ",
+      "value": 1000,
+      "id": 9
+    }
   ]
 }

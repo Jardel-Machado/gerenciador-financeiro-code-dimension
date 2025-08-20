@@ -5,10 +5,14 @@ import { NoTransactions } from 'src/app/home/components/no-transactions/no-trans
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TransactionService } from 'src/app/shared/transaction/services/transaction';
 import { Transaction } from 'src/app/shared/transaction/interfaces/transaction';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-home',
-  imports: [Balance, TransactionItem, NoTransactions],
+  imports: [Balance, TransactionItem, NoTransactions, MatButtonModule, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

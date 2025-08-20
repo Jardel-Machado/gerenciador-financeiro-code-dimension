@@ -1,0 +1,48 @@
+<form [formGroup]="form" (ngSubmit)="criarTransacao()">
+  <div class="mb-24">
+    <mat-button-toggle-group [formControlName]="'type'">
+      <mat-button-toggle [value]="transactionType.OUTCOME">Gasto</mat-button-toggle>
+      <mat-button-toggle [value]="transactionType.INCOME">Ganho</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    @if (form.get('type')?.invalid) {
+      <mat-error>{{transactionTypeErrorMessage()}}</mat-error>
+    }
+  </div>
+
+  <mat-form-field class="w-100 mb-24">
+    <mat-label>Título</mat-label>
+    <input
+      matInput
+      placeholder="Digite o título da transação"
+      [formControlName]="'title'"
+      (blur)="updateTitleErrorMessage()"
+      required
+    />
+    @if (form.get('title')?.invalid) {
+      <mat-error>{{titleErrorMessage()}}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field class="w-100 mb-24">
+    <mat-label>Valor</mat-label>
+    <input
+      matInput
+      min="0"
+      placeholder="Digite o valor da transação"
+      [formControlName]="'value'"
+      (blur)="updateValueErrorMessage()"
+      required
+      mask="separator.2"
+    />
+    <span matTextPrefix>R$ &nbsp;</span>
+    @if (form.get('value')?.invalid) {
+      <mat-error>{{valueErrorMessage()}}</mat-error>
+    }
+  </mat-form-field>
+
+  <div class="submit-container">
+    <button type="submit" mat-flat-button="filled" [disabled]="form.invalid">Salvar</button>
+  </div>
+
+</form>

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Transaction } from 'src/app/shared/transaction/interfaces/transaction';
+import { Transaction, TransactionRequest } from 'src/app/shared/transaction/interfaces/transaction';
 
 @Injectable({
   providedIn: 'root',
@@ -16,5 +16,9 @@ export class TransactionService {
 
   getAll() {
     return this.httpClient.get<Transaction[]>(this.api);
+  }
+
+  create(request: TransactionRequest) {
+    return this.httpClient.post<Transaction>(this.api, request);
   }
 }
