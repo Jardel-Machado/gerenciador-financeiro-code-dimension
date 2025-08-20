@@ -9,9 +9,5 @@ export const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./home/routes').then((c) => c.routes),
-  },
-  {
-    path: '**',
-    loadChildren: () => import('./home/routes').then((c) => c.routes),
-  },
+  }
 ];

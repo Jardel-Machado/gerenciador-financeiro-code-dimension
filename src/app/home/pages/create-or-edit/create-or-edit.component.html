@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="criarTransacao()">
+<form [formGroup]="form" (ngSubmit)="createOrEditTransaction()">
   <div class="mb-24">
     <mat-button-toggle-group [formControlName]="'type'">
       <mat-button-toggle [value]="transactionType.OUTCOME">Gasto</mat-button-toggle>

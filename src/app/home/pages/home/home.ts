@@ -6,13 +6,19 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TransactionService } from 'src/app/shared/transaction/services/transaction';
 import { Transaction } from 'src/app/shared/transaction/interfaces/transaction';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 
 
 @Component({
   selector: 'app-home',
-  imports: [Balance, TransactionItem, NoTransactions, MatButtonModule, RouterLink],
+  imports: [
+    Balance,
+    TransactionItem,
+    NoTransactions,
+    MatButtonModule,
+    RouterLink,
+  ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -21,6 +27,7 @@ export class Home implements OnInit {
 
   private readonly transactionService = inject(TransactionService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
 
   ngOnInit() {
     this.getTransactions();
@@ -38,5 +45,9 @@ export class Home implements OnInit {
           console.error('Error fetching transactions:', error);
         },
       });
+  }
+
+  edit(transaction: Transaction) {
+    this.router.navigate(['home/edit', transaction.id]);
   }
 }

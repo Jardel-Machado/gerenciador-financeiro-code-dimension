@@ -21,4 +21,12 @@ export class TransactionService {
   create(request: TransactionRequest) {
     return this.httpClient.post<Transaction>(this.api, request);
   }
+
+  update(id: number, request: TransactionRequest) {
+    return this.httpClient.put<Transaction>(`${this.api}/${id}`, request);
+  }
+
+  delete(id: number) {
+    return this.httpClient.delete(`${this.api}/${id}`);
+  }
 }

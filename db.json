@@ -1,10 +1,10 @@
 {
   "transactions": [
     {
-      "id": 1,
+      "type": "income",
       "title": "Salário",
       "value": 100,
-      "type": "income"
+      "id": 1
     },
     {
       "id": 2,
@@ -53,6 +53,12 @@
       "title": "Teste 2 ",
       "value": 1000,
       "id": 9
+    },
+    {
+      "type": "outcome",
+      "title": "Teste 3",
+      "value": 2,
+      "id": 10
     }
   ]
 }

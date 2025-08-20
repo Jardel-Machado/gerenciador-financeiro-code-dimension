@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,12 +9,12 @@ import { TransactionType } from 'src/app/shared/transaction/enums/transaction-ty
 import { NgxMaskDirective } from 'ngx-mask';
 import { TransactionService } from 'src/app/shared/transaction/services/transaction';
 import { Router } from '@angular/router';
-import { TransactionRequest } from 'src/app/shared/transaction/interfaces/transaction';
+import { Transaction, TransactionRequest } from 'src/app/shared/transaction/interfaces/transaction';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FeedbackService } from 'src/app/shared/feedback/services/feedback.service';
 
 @Component({
-  selector: 'app-create',
+  selector: 'app-create-or-edit',
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -23,13 +23,15 @@ import { FeedbackService } from 'src/app/shared/feedback/services/feedback.servi
     MatButtonToggleModule,
     NgxMaskDirective,
   ],
-  templateUrl: './create.component.html',
-  styleUrl: './create.component.scss',
+  templateUrl: './create-or-edit.component.html',
+  styleUrl: './create-or-edit.component.scss',
 })
-export class CreateComponent implements OnInit {
+export class CreateOrEditComponent implements OnInit {
   readonly transactionType = TransactionType;
 
   form!: FormGroup;
+
+  transaction = input<Transaction>();
 
   titleErrorMessage = signal('');
 
@@ -45,6 +47,9 @@ export class CreateComponent implements OnInit {
 
   ngOnInit() {
     this.iniciarFormulario();
+    if(this.transaction()){
+      this.form.patchValue(this.transaction()!);
+    }
   }
 
   iniciarFormulario() {
@@ -77,22 +82,36 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  criarTransacao() {
+  createOrEditTransaction() {
     if (this.form.valid) {
       const request: TransactionRequest = this.form.value;
 
-      this.transactionService
-        .create(request)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
+      if(this.transaction()){
+        this.transactionService.update(this.transaction()!.id, request)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: () => {
+              this.feedbackService.success('Transação atualizada com sucesso!');
+              this.router.navigate(['/']);
+            },
+            error: (error) => {
+              console.error('Erro ao atualizar transação:', error);
+            },
+          });
+      } else {
+        this.transactionService
+          .create(request)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
           next: () => {
-            this.feedbackService.success('Transação criada com sucesso!')
+            this.feedbackService.success('Transação criada com sucesso!');
             this.router.navigate(['/']);
           },
           error: (error) => {
             console.error('Erro ao criar transação:', error);
           },
         });
+      }
     }
   }
 }
