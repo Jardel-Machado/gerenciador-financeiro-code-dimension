@@ -7,8 +7,8 @@ import { TransactionService } from 'src/app/shared/transaction/services/transact
 import { Transaction } from 'src/app/shared/transaction/interfaces/transaction';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
-
-
+import { FeedbackService } from 'src/app/shared/feedback/services/feedback.service';
+import { ConfirmationDialogService } from 'src/app/shared/dialog/confirmation/services/confirmation-dialog.service';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +28,8 @@ export class Home implements OnInit {
   private readonly transactionService = inject(TransactionService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
+  private readonly feedbackService = inject(FeedbackService);
+  private readonly confirmationDialogService = inject(ConfirmationDialogService);
 
   ngOnInit() {
     this.getTransactions();
@@ -49,5 +51,37 @@ export class Home implements OnInit {
 
   edit(transaction: Transaction) {
     this.router.navigate(['home/edit', transaction.id]);
+  }
+
+  remove(transaction: Transaction) {
+    this.confirmationDialogService.open({
+      title: 'Deletar transação',
+      message: 'Você gostaria de deletar essa transação?',
+    })
+      .subscribe({
+        next: () => {
+          this.transactionService
+            .delete(transaction.id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: () => {
+                this.removeTransactionFromArray(transaction);
+                this.feedbackService.success('Transação removida com sucesso!');
+              },
+              error: (error) => {
+                console.error('Error deleting transaction:', error);
+              },
+            });
+        },
+        error: (error) => {
+          console.error('Error in dialog:', error);
+        },
+      });
+  }
+
+  private removeTransactionFromArray(transaction: Transaction) {
+    this.transactions.update((transactions) =>
+      transactions.filter((item) => item.id !== transaction.id)
+    );
   }
 }
