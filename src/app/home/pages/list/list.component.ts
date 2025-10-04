@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, linkedSignal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink, Router } from '@angular/router';
@@ -25,33 +25,15 @@ import { TransactionService } from 'src/app/shared/transaction/services/transact
   styleUrl: './list.component.scss',
 })
 export class ListComponent {
-  transactions = signal<Transaction[]>([]);
+  transactions = input.required<Transaction[]>();
+
+  items = linkedSignal(() => this.transactions())
 
   private readonly transactionService = inject(TransactionService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly feedbackService = inject(FeedbackService);
-  private readonly confirmationDialogService = inject(
-    ConfirmationDialogService
-  );
-
-  ngOnInit() {
-    this.getTransactions();
-  }
-
-  getTransactions() {
-    this.transactionService
-      .getAll()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response) => {
-          this.transactions.set(response);
-        },
-        error: (error) => {
-          console.error('Error fetching transactions:', error);
-        },
-      });
-  }
+  private readonly confirmationDialogService = inject(ConfirmationDialogService);
 
   edit(transaction: Transaction) {
     this.router.navigate(['home/edit', transaction.id]);
@@ -85,7 +67,7 @@ export class ListComponent {
   }
 
   private removeTransactionFromArray(transaction: Transaction) {
-    this.transactions.update((transactions) =>
+    this.items.update((transactions) =>
       transactions.filter((item) => item.id !== transaction.id)
     );
   }

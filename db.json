@@ -3,7 +3,7 @@
     {
       "type": "income",
       "title": "Salário",
-      "value": 100,
+      "value": 102,
       "id": 1
     },
     {
@@ -35,6 +35,12 @@
       "title": "Teste 2 ",
       "value": 1000,
       "id": 9
+    },
+    {
+      "type": "outcome",
+      "title": "Teste",
+      "value": 12,
+      "id": 10
     }
   ]
 }
