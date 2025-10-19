@@ -19,7 +19,7 @@ import { TransactionService } from 'src/app/shared/transaction/services/transact
     NoTransactions,
     MatButtonModule,
     RouterLink,
-    TransactionsContainerComponent,
+    TransactionsContainerComponent
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -34,6 +34,19 @@ export class ListComponent {
   private readonly router = inject(Router);
   private readonly feedbackService = inject(FeedbackService);
   private readonly confirmationDialogService = inject(ConfirmationDialogService);
+
+  object = signal({
+    name: 'Jardel',
+    age: 40,
+    job: 'Fullstack Developer',
+  })
+
+  addProp() {
+    this.object.update((value: any) => {
+      value['hairColor'] = 'Black';
+      return value;
+    })
+  }
 
   edit(transaction: Transaction) {
     this.router.navigate(['home/edit', transaction.id]);

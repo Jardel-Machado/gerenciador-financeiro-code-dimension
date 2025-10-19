@@ -11,21 +11,39 @@ import { UserCredentials } from 'src/app/auth/interfaces/user-credentials';
 export class AuthService {
   login(payload: UserCredentials): Observable<AuthTokenResponse> {
     if (payload.user === 'admin' && payload.password === '123') {
-      return of({ token: 'fake-jwt-token' });
+      return of({ token: this.generateJwtToken() });
     }
     return throwError(
       () => new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' })
     );
   }
 
-  logout(): void {
-    // Implement logout logic if needed
+  logout() {
+    return of({});
   }
 
   getCurrentUser(token: string): Observable<User> {
     return of({
       id: 1,
-      username: 'admin'
+      username: 'admin',
     });
+  }
+
+  refreshToken(token: string) {
+    return of({ token: this.generateJwtToken() });
+  }
+
+  private generateJwtToken(): string {
+    let token = '';
+    const possibleChars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0; i < 20; i++) {
+      token += possibleChars.charAt(
+        Math.floor(Math.random() * possibleChars.length)
+      );
+    }
+
+    return token;
   }
 }

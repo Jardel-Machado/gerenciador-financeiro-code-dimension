@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 import { Transaction, TransactionRequest } from 'src/app/shared/transaction/interfaces/transaction';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FeedbackService } from 'src/app/shared/feedback/services/feedback.service';
+import { CustomFormFieldDirective } from 'src/app/shared/material/form-field/directives/custom-form-field.directive';
+
 
 @Component({
   selector: 'app-create-or-edit',
@@ -22,6 +24,7 @@ import { FeedbackService } from 'src/app/shared/feedback/services/feedback.servi
     MatButtonModule,
     MatButtonToggleModule,
     NgxMaskDirective,
+    CustomFormFieldDirective,
   ],
   templateUrl: './create-or-edit.component.html',
   styleUrl: './create-or-edit.component.scss',
@@ -47,7 +50,7 @@ export class CreateOrEditComponent implements OnInit {
 
   ngOnInit() {
     this.iniciarFormulario();
-    if(this.transaction()){
+    if (this.transaction()) {
       this.form.patchValue(this.transaction()!);
     }
   }
@@ -86,8 +89,9 @@ export class CreateOrEditComponent implements OnInit {
     if (this.form.valid) {
       const request: TransactionRequest = this.form.value;
 
-      if(this.transaction()){
-        this.transactionService.update(this.transaction()!.id, request)
+      if (this.transaction()) {
+        this.transactionService
+          .update(this.transaction()!.id, request)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => {
@@ -103,14 +107,14 @@ export class CreateOrEditComponent implements OnInit {
           .create(request)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
-          next: () => {
-            this.feedbackService.success('Transação criada com sucesso!');
-            this.router.navigate(['/']);
-          },
-          error: (error) => {
-            console.error('Erro ao criar transação:', error);
-          },
-        });
+            next: () => {
+              this.feedbackService.success('Transação criada com sucesso!');
+              this.router.navigate(['/']);
+            },
+            error: (error) => {
+              console.error('Erro ao criar transação:', error);
+            },
+          });
       }
     }
   }

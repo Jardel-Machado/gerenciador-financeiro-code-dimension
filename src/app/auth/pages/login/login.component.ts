@@ -5,11 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { switchMap, tap } from 'rxjs';
+import { LoginFacadeService } from 'src/app/auth/facades/login-facade.service';
 import { UserCredentials } from 'src/app/auth/interfaces/user-credentials';
-import { AuthTokenStorageService } from 'src/app/auth/services/auth-token-storage.service';
-import { AuthService } from 'src/app/auth/services/auth.service';
-import { LoggedInUserStoreService } from 'src/app/auth/stores/logged-in-user-store.service';
 
 @Component({
   selector: 'app-login',
@@ -25,10 +22,8 @@ import { LoggedInUserStoreService } from 'src/app/auth/stores/logged-in-user-sto
 export class LoginComponent implements OnInit {
   form!: FormGroup;
 
-  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly authTokenStorageService = inject(AuthTokenStorageService);
-  private readonly loggedInUserStoreService = inject(LoggedInUserStoreService);
+  private readonly loginFacadeService = inject(LoginFacadeService);
 
   ngOnInit() {
     this.iniciarFormulario();
@@ -51,23 +46,15 @@ export class LoginComponent implements OnInit {
       password: this.form.value.password,
     };
 
-    this.authService.login(payload)
-    .pipe(
-      tap((response) => this.authTokenStorageService.saveToken(response.token)),
-      switchMap((response) => this.authService.getCurrentUser(response.token)),
-      tap((user) => this.loggedInUserStoreService.setUser(user)),
-    )
-    .subscribe({
+    this.loginFacadeService.login(payload).subscribe({
       next: (response) => {
         this.router.navigate(['']);
       },
       error: (error: HttpErrorResponse) => {
         if (error.status === 401) {
-          this.form.setErrors({
-            wrongCredentials: true,
-          });
+          this.form!.setErrors({ wrongCredentials: true });
         }
-      },
+      }
     });
   }
 }
